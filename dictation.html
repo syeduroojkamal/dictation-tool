@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Dictation Tool</title>
+<style>
+body{
+    font-family: Arial;
+    max-width: 800px;
+    margin: 40px auto;
+}
+textarea{
+    width:100%;
+    height:200px;
+}
+button{
+    padding:10px 20px;
+    font-size:16px;
+}
+#current{
+    margin-top:20px;
+    font-size:20px;
+}
+</style>
+</head>
+
+<body>
+
+<h2>Handwritten Assignment Dictation</h2>
+
+<textarea id="text" placeholder="Paste your assignment text here"></textarea>
+<br><br>
+
+<button onclick="start()">Start Dictation</button>
+<button onclick="next()">Next Sentence</button>
+<button onclick="repeat()">Repeat</button>
+
+<div id="current"></div>
+
+<script>
+
+let sentences = []
+let index = 0
+let synth = window.speechSynthesis
+let currentSentence = ""
+
+function splitSentences(text){
+    return text.match(/[^.!?,]+[.!?,]+|[^.!?,]+$/g) || []
+}
+
+function speak(text){
+    let utter = new SpeechSynthesisUtterance(text)
+    utter.rate = 0.9
+    synth.speak(utter)
+}
+
+function start(){
+    let text = document.getElementById("text").value
+    sentences = splitSentences(text)
+    index = 0
+    next()
+}
+
+function next(){
+    if(index >= sentences.length) return
+
+    currentSentence = sentences[index].trim()
+    document.getElementById("current").innerText = currentSentence
+
+    speak(currentSentence)
+    index++
+}
+
+function repeat(){
+    speak(currentSentence)
+}
+
+</script>
+
+</body>
+</html>
